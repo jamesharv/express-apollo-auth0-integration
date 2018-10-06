@@ -4,6 +4,7 @@
 export const authenticatedDef = `
   enum Role {
     ADMIN
+    AUTH0
     USER
   }
   directive @authenticated(

@@ -29,6 +29,14 @@ export class AuthDirective extends SchemaDirectiveVisitor {
        const field = fields[fieldName];
        const { resolve = defaultFieldResolver } = field;
        field.resolve = async function(...args): Promise<any> {
+         const requiredRole =
+          field._requiredAuthRole ||
+          objectType._requiredAuthRole;
+
+         if (!requiredRole) {
+           return resolve.apply(this, args);
+         }
+
          const context = args[2];
          try {
            await authorize("Bearer foo");
