@@ -17,7 +17,7 @@ export class AuthDirective extends SchemaDirectiveVisitor {
      field._requiredAuthRole = this.args.requires;
    }
 
-   public ensureFieldsWrapped(objectType): void {
+   public async ensureFieldsWrapped(objectType): Promise<void> {
      if (objectType._authFieldsWrapped) {
        return;
      }
@@ -39,7 +39,7 @@ export class AuthDirective extends SchemaDirectiveVisitor {
 
          const context = args[2];
          try {
-           await authorize(context.authHeader);
+           await authorize("Bearer foo");
          }
          catch (e) {
            throw new GraphqlAuthError();

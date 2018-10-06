@@ -18,7 +18,7 @@ const getKey = (header: { kid: string }, cb: (header: string, key: string) => st
 const options = {
   algorithms: ["RS256"],
   audience: process.env.AUTH0_AUDIENCE,
-  issuer: "https://tester-equiem.au.auth0.com/",
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
 };
 
 /**

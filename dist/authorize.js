@@ -25,7 +25,7 @@ const getKey = (header, cb) => {
 const options = {
     algorithms: ["RS256"],
     audience: process.env.AUTH0_AUDIENCE,
-    issuer: "https://tester-equiem.au.auth0.com/",
+    issuer: `https://${process.env.AUTH0_DOMAIN}/`,
 };
 /**
  * Authorize function.

@@ -6,7 +6,7 @@
   ],
   "linterOptions": {
     "exclude": [
-      "types/**/*.d.ts"
+      "types/**/*"
     ]
   },
   "rules": {
