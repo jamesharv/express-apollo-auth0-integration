@@ -1,0 +1,1 @@
+{"version":3,"file":"AuthDirective.js","sourceRoot":"","sources":["../src/AuthDirective.ts"],"names":[],"mappings":";;AAAA,iDAAuD;AAGvD;;GAEG;AACH,MAAa,aAAc,SAAQ,sCAAsB;IAEhD,oBAAoB,CAAC,KAA6B;QACvD,MAAM,MAAM,GAAG,IAAI,CAAC,IAAI,CAAC,MAAM,CAAC;QAChC,OAAO,CAAC,GAAG,CAAC,MAAM,CAAC,CAAC;QACpB,OAAO,CAAC,GAAG,CAAC,KAAK,CAAC,CAAC;IACrB,CAAC;CACF;AAPD,sCAOC"}

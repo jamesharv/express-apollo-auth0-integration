@@ -1,0 +1,35 @@
+{
+  "name": "apollo-auth0-extension",
+  "version": "1.0.0",
+  "description": "Auth0 auth handling for Apollo server",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "compile": "npm run clean && tsc",
+    "lint": "tslint -p .",
+    "test": "npm run lint",
+    "watch": "npm run clean && tsc-watch --onSuccess 'echo Compiled successfully!' --onFailure 'echo Compilation failed!'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Equiem/apollo-auth0-extension.git"
+  },
+  "author": "Equiem",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Equiem/apollo-auth0-extension/issues"
+  },
+  "homepage": "https://github.com/Equiem/apollo-auth0-extension#readme",
+  "dependencies": {
+    "apollo-server": "^2.1.0",
+    "graphql": "^14.0.2"
+  },
+  "devDependencies": {
+    "@types/graphql": "^14.0.1",
+    "@types/node": "^10.11.4",
+    "tsc-watch": "^1.0.29",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.1.1"
+  }
+}
