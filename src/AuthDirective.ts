@@ -1,5 +1,5 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
-import { defaultFieldResolver, GraphQLField } from "graphql";
+import { defaultFieldResolver, GraphQLField, GraphQLObjectType } from "graphql";
 
 /**
  * Auth directive for allowing field level authorization.
@@ -10,5 +10,11 @@ export class AuthDirective extends SchemaDirectiveVisitor {
     const scopes = this.args.scopes;
     console.log(scopes);
     console.log(field);
+  }
+
+  public visitObject(object: GraphQLObjectType): void {
+    const scopes = this.args.scopes;
+    console.log(scopes);
+    console.log(object);
   }
 }
