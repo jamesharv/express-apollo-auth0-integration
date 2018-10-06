@@ -1,0 +1,1 @@
+{"version":3,"file":"GraphqlAuthError.js","sourceRoot":"","sources":["../../src/exceptions/GraphqlAuthError.ts"],"names":[],"mappings":";;AAAA,iDAAoD;AAEpD;;GAEG;AACH,MAAa,gBAAiB,SAAQ,mCAAmB;IACvD;QACE,KAAK,CAAC,wBAAwB,CAAC,CAAC;IAClC,CAAC;CACF;AAJD,4CAIC"}

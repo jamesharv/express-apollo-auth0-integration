@@ -4,6 +4,11 @@
     "tslint-eslint-rules",
     "tslint:recommended"
   ],
+  "linterOptions": {
+    "exclude": [
+      "types/**/*.d.ts"
+    ]
+  },
   "rules": {
     "array-type": [true, "array-simple"],
     "arrow-parens": true,

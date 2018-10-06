@@ -1,8 +1,9 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
-import { GraphQLField } from "graphql";
 /**
  * Auth directive for allowing field level authorization.
  */
 export declare class AuthDirective extends SchemaDirectiveVisitor {
-    visitFieldDefinition(field: GraphQLField<any, any>): void;
+    visitObject(type: any): void;
+    visitFieldDefinition(field: any, details: any): void;
+    ensureFieldsWrapped(objectType: any): void;
 }

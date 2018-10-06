@@ -14,8 +14,8 @@
       "esnext.asynciterable"
     ],
     "typeRoots": [
-      "./types",
-      "./node_modules/@types"
+      "./node_modules/@types",
+      "./types"
     ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
