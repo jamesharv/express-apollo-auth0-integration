@@ -25,33 +25,26 @@ class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
         field._requiredAuthRole = this.args.requires;
     }
     ensureFieldsWrapped(objectType) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (objectType._authFieldsWrapped) {
-                return;
-            }
-            objectType._authFieldsWrapped = true;
-            const fields = objectType.getFields();
-            Object.keys(fields).forEach((fieldName) => {
-                const field = fields[fieldName];
-                const { resolve = graphql_1.defaultFieldResolver } = field;
-                field.resolve = function (...args) {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        const requiredRole = field._requiredAuthRole ||
-                            objectType._requiredAuthRole;
-                        if (!requiredRole) {
-                            return resolve.apply(this, args);
-                        }
-                        const context = args[2];
-                        try {
-                            yield authorize_1.authorize("Bearer foo");
-                        }
-                        catch (e) {
-                            throw new GraphqlAuthError_1.GraphqlAuthError();
-                        }
-                        return resolve.apply(this, args);
-                    });
-                };
-            });
+        if (objectType._authFieldsWrapped) {
+            return;
+        }
+        objectType._authFieldsWrapped = true;
+        const fields = objectType.getFields();
+        Object.keys(fields).forEach((fieldName) => {
+            const field = fields[fieldName];
+            const { resolve = graphql_1.defaultFieldResolver } = field;
+            field.resolve = function (...args) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    const context = args[2];
+                    try {
+                        yield authorize_1.authorize("Bearer foo");
+                    }
+                    catch (e) {
+                        throw new GraphqlAuthError_1.GraphqlAuthError();
+                    }
+                    return resolve.apply(this, args);
+                });
+            };
         });
     }
 }
