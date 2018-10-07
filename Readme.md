@@ -27,7 +27,7 @@ const server = new ApolloServer({
   schemaDirectives: {
     authenticated: AuthDirective,
   },
-  typeDefs: gql`${authenticatedDef} ${yourCustomTypes}`,
+  typeDefs: gql`${authenticatedDirectiveTypeDef} ${yourCustomTypes}`,
 });
 ```
 
