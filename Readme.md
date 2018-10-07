@@ -1,6 +1,8 @@
 # Apollo Auth0 Directive
 Handles verifying JWTs inside your graphql schema.
 
+Based on https://www.apollographql.com/docs/apollo-server/features/creating-directives.html#Enforcing-access-permissions
+
 ## Usage
 Required env variables:
 ```
