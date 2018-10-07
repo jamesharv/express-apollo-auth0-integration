@@ -15,7 +15,7 @@ Add to your package.json:
 
 Imports:
 ```
-import { AuthDirective, authenticatedDef } from "apollo-auth0-extension";
+import { AuthDirective, authenticatedDirectiveTypeDef } from "apollo-auth0-extension";
 ```
 
 Configure ApolloServer:

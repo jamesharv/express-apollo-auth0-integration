@@ -1,7 +1,7 @@
 /**
  * Graphql authenticated directive type.
  */
-export const authenticatedDef = `
+export const authenticatedDirectiveTypeDef = `
   enum Role {
     ADMIN
     AUTH0
