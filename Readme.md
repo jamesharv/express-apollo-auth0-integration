@@ -1,5 +1,5 @@
-# Apollo Auth0 Directive
-Handles verifying JWTs inside your graphql schema.
+# Express Apollo Auth0 Integration
+Handles verifying JWTs inside your express application and/or graphQL schema.
 
 Based on https://www.apollographql.com/docs/apollo-server/features/creating-directives.html#Enforcing-access-permissions
 
@@ -12,12 +12,12 @@ AUTH0_AUDIENCE: https://equiem-syndicate-api-staging.herokuapp.com/
 
 Add to your package.json:
 ```
-"apollo-auth0-extension": "git+https://github.com/Equiem/apollo-auth0-extension.git"
+"apollo-auth0-extension": "git+https://github.com/Equiem/express-apollo-auth0-integration.git"
 ```
 
 Imports:
 ```
-import { AuthDirective, authenticatedDirectiveTypeDef } from "apollo-auth0-extension";
+import { AuthDirective, authenticatedDirectiveTypeDef } from "express-apollo-auth0-integration";
 ```
 
 Configure ApolloServer:
@@ -33,7 +33,7 @@ const server = new ApolloServer({
 
 Copy the graphql definitions into `/graphql/vendor/authenticated.graphql`:
 ```
-# Copied from node_modules/apollo-auth0-extension/src/authenticatedDef.ts
+# Copied from node_modules/express-apollo-auth0-integration/src/authenticatedDirectiveTypeDef.ts
 enum Role {
   ADMIN
   AUTH0
