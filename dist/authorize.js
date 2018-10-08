@@ -30,7 +30,7 @@ const getJWTData = (token) => {
         return jwt_runtypes_1.RawJwtDataRecord.check(dtoken);
     }
     catch (e) {
-        throw new GraphqlAuthError_1.GraphqlAuthError();
+        throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted JWT.");
     }
 };
 const getSigningKey = (kid) => __awaiter(this, void 0, void 0, function* () {
@@ -39,7 +39,7 @@ const getSigningKey = (kid) => __awaiter(this, void 0, void 0, function* () {
         return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
     }
     catch (e) {
-        throw new GraphqlAuthError_1.GraphqlAuthError();
+        throw new GraphqlAuthError_1.GraphqlAuthError("Unable to retrieve public key from kid.");
     }
 });
 /**
@@ -51,18 +51,19 @@ const getSigningKey = (kid) => __awaiter(this, void 0, void 0, function* () {
  */
 exports.authorize = (authHeader, scopes = []) => __awaiter(this, void 0, void 0, function* () {
     if (authHeader == null) {
-        throw new GraphqlAuthError_1.GraphqlAuthError();
+        throw new GraphqlAuthError_1.GraphqlAuthError("No Authorization header provided.");
     }
     // Split out "Bearer" from "JWT" in Authorization header.
     const [type, token] = authHeader.split(" ", 2);
     if (type !== "Bearer" || token == null || token === "") {
-        throw new GraphqlAuthError_1.GraphqlAuthError();
+        throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted Authorization header.");
     }
     const jwtData = getJWTData(token);
     const signingKey = yield getSigningKey(jwtData.header.kid);
     return new Promise((resolve, reject) => {
         jwt.verify(token, signingKey, options, (err, decoded) => {
             if (err !== undefined) {
+                console.log("JWT verification error:", err);
                 reject(err);
                 return;
             }

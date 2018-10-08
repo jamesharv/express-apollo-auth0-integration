@@ -24,7 +24,7 @@ const getJWTData = (token: string): RawJwtData => {
    return RawJwtDataRecord.check(dtoken);
  }
  catch (e) {
-   throw new GraphqlAuthError();
+   throw new GraphqlAuthError("Incorrectly formatted JWT.");
  }
 };
 
@@ -35,7 +35,7 @@ const getSigningKey = async (kid: string): Promise<string> => {
     return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
   }
   catch (e) {
-    throw new GraphqlAuthError();
+    throw new GraphqlAuthError("Unable to retrieve public key from kid.");
   }
 };
 
@@ -48,13 +48,13 @@ const getSigningKey = async (kid: string): Promise<string> => {
  */
 export const authorize = async (authHeader?: string, scopes: string[] = []): Promise<any> => {
   if (authHeader == null) {
-    throw new GraphqlAuthError();
+    throw new GraphqlAuthError("No Authorization header provided.");
   }
 
   // Split out "Bearer" from "JWT" in Authorization header.
   const [type, token] = authHeader.split(" ", 2);
   if (type !== "Bearer" || token == null || token === "") {
-    throw new GraphqlAuthError();
+    throw new GraphqlAuthError("Incorrectly formatted Authorization header.");
   }
   const jwtData = getJWTData(token);
   const signingKey = await getSigningKey(jwtData.header.kid);
@@ -62,6 +62,7 @@ export const authorize = async (authHeader?: string, scopes: string[] = []): Pro
   return new Promise((resolve, reject): void => {
     jwt.verify(token, signingKey, options, (err, decoded) => {
       if (err !== undefined) {
+        console.log("JWT verification error:", err);
         reject(err);
 
         return;
