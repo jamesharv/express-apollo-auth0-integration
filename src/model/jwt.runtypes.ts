@@ -1,20 +1,21 @@
-import { Array, Number, Record, Static, String, Union } from "runtypes";
+import { Array, Number, Partial, Record, Static, String, Union } from "runtypes";
 
 /**
  * Runtypes: define the JWT payload.
  */
 export const RawJwtPayloadRecord = Record({
-  "aud": Union(
+  aud: Union(
     Array(String),
     String,
   ),
-  "exp": Number,
+  exp: Number,
+  iss: String,
+  sub: String,
+}).And(Partial({
   "http://getequiem.com/portals": Array(String),
   "http://getequiem.com/uuid": String,
   "iat": Number,
-  "iss": String,
-  "sub": String,
-});
+}));
 
 /**
  * Runtypes: define the JWT header.

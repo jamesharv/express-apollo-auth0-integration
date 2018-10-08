@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 const graphql_1 = require("graphql");
-const authorize_1 = require("./authorize");
 const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
+const Auth_1 = require("./model/Auth");
 /**
  * Auth directive for allowing field level authorization.
  */
@@ -41,7 +41,8 @@ class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
                     }
                     const context = args[2];
                     try {
-                        yield authorize_1.authorize("Bearer foo");
+                        const auth = new Auth_1.Auth();
+                        yield auth.authorize("Bearer foo");
                     }
                     catch (e) {
                         throw new GraphqlAuthError_1.GraphqlAuthError();

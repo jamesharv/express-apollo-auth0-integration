@@ -1,16 +1,17 @@
-import { Array, Number, Record, Static, String } from "runtypes";
+import { Array, Number, Partial, Record, Static, String } from "runtypes";
 /**
  * Runtypes: define the JWT payload.
  */
-export declare const RawJwtPayloadRecord: Record<{
-    "aud": import("runtypes/lib/types/union").Union2<Array<String>, String>;
-    "exp": Number;
+export declare const RawJwtPayloadRecord: import("runtypes/lib/types/intersect").Intersect2<Record<{
+    aud: import("runtypes/lib/types/union").Union2<Array<String>, String>;
+    exp: Number;
+    iss: String;
+    sub: String;
+}>, Partial<{
     "http://getequiem.com/portals": Array<String>;
     "http://getequiem.com/uuid": String;
     "iat": Number;
-    "iss": String;
-    "sub": String;
-}>;
+}>>;
 /**
  * Runtypes: define the JWT header.
  */
@@ -24,15 +25,16 @@ export declare const RawJwtDataRecord: Record<{
     header: Record<{
         kid: String;
     }>;
-    payload: Record<{
-        "aud": import("runtypes/lib/types/union").Union2<Array<String>, String>;
-        "exp": Number;
+    payload: import("runtypes/lib/types/intersect").Intersect2<Record<{
+        aud: import("runtypes/lib/types/union").Union2<Array<String>, String>;
+        exp: Number;
+        iss: String;
+        sub: String;
+    }>, Partial<{
         "http://getequiem.com/portals": Array<String>;
         "http://getequiem.com/uuid": String;
         "iat": Number;
-        "iss": String;
-        "sub": String;
-    }>;
+    }>>;
 }>;
 /**
  * Export the JWT data type.

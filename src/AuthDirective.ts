@@ -1,7 +1,7 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
 import { defaultFieldResolver, GraphQLField } from "graphql";
-import { authorize } from "./authorize";
 import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
+import { Auth } from "./model/Auth";
 import { ExtendedGraphQLObjectType } from "./model/ExtendedGraphQLObjectType";
 
 // Extension of GraphQL Field with addition type info.
@@ -44,7 +44,8 @@ export class AuthDirective extends SchemaDirectiveVisitor {
 
          const context = args[2];
          try {
-           await authorize("Bearer foo");
+           const auth = new Auth();
+           await auth.authorize("Bearer foo");
          }
          catch (e) {
            throw new GraphqlAuthError();

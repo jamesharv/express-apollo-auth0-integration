@@ -5,14 +5,15 @@ const runtypes_1 = require("runtypes");
  * Runtypes: define the JWT payload.
  */
 exports.RawJwtPayloadRecord = runtypes_1.Record({
-    "aud": runtypes_1.Union(runtypes_1.Array(runtypes_1.String), runtypes_1.String),
-    "exp": runtypes_1.Number,
+    aud: runtypes_1.Union(runtypes_1.Array(runtypes_1.String), runtypes_1.String),
+    exp: runtypes_1.Number,
+    iss: runtypes_1.String,
+    sub: runtypes_1.String,
+}).And(runtypes_1.Partial({
     "http://getequiem.com/portals": runtypes_1.Array(runtypes_1.String),
     "http://getequiem.com/uuid": runtypes_1.String,
     "iat": runtypes_1.Number,
-    "iss": runtypes_1.String,
-    "sub": runtypes_1.String,
-});
+}));
 /**
  * Runtypes: define the JWT header.
  */
