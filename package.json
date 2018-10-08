@@ -1,5 +1,5 @@
 {
-  "name": "apollo-auth0-extension",
+  "name": "express-apollo-auth0-integration",
   "version": "1.0.0",
   "description": "Auth0 auth handling for Apollo server",
   "main": "dist/index.js",
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Equiem/apollo-auth0-extension.git"
+    "url": "git+https://github.com/Equiem/express-apollo-auth0-integration.git"
   },
   "author": "Equiem",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Equiem/apollo-auth0-extension/issues"
+    "url": "https://github.com/Equiem/express-apollo-auth0-integration/issues"
   },
-  "homepage": "https://github.com/Equiem/apollo-auth0-extension#readme",
+  "homepage": "https://github.com/Equiem/express-apollo-auth0-integration#readme",
   "dependencies": {
     "apollo-server": "^2.1.0",
     "express": "^4.16.3",
