@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+if [[ $3 == "--watch" ]]; then
+  # We add --no-timeouts because code tested under --watch runs significantly slower.
+  echo "$ mocha --no-timeouts $@"
+  exec mocha --inspect=0.0.0.0:9223 --no-timeouts "$@"
+else
+  cat /dev/null > mocha.log
+  echo "$ nyc mocha $@"
+  exec nyc mocha --inspect=0.0.0.0:9223 "$@"
+fi

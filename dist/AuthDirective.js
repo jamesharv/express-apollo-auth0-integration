@@ -16,9 +16,9 @@ const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
  * Auth directive for allowing field level authorization.
  */
 class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
-    visitObject(type) {
-        this.ensureFieldsWrapped(type);
-        type._requiredAuthRole = this.args.requires;
+    visitObject(field) {
+        this.ensureFieldsWrapped(field);
+        field._requiredAuthRole = this.args.requires;
     }
     visitFieldDefinition(field, details) {
         this.ensureFieldsWrapped(details.objectType);
@@ -35,6 +35,10 @@ class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
             const { resolve = graphql_1.defaultFieldResolver } = field;
             field.resolve = function (...args) {
                 return __awaiter(this, void 0, void 0, function* () {
+                    const requiredRole = field._requiredAuthRole !== null ? field._requiredAuthRole : objectType._requiredAuthRole;
+                    if (requiredRole == null) {
+                        return resolve.apply(this, args);
+                    }
                     const context = args[2];
                     try {
                         yield authorize_1.authorize("Bearer foo");

@@ -1,2 +1,3 @@
 export { AuthDirective } from "./AuthDirective";
-export { authenticatedDef } from "./authenticatedDef";
+export { authenticatedDirectiveTypeDef } from "./authenticatedDirectiveTypeDef";
+export { authorizeGraphqlRoute } from "./authorizeGraphqlRoute";

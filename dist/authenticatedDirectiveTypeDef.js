@@ -3,13 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Graphql authenticated directive type.
  */
-exports.authenticatedDef = `
+exports.authenticatedDirectiveTypeDef = `
   enum Role {
     ADMIN
+    AUTH0
     USER
   }
   directive @authenticated(
     requires: Role = ADMIN,
   ) on FIELD_DEFINITION | OBJECT
 `.toString();
-//# sourceMappingURL=authenticatedDef.js.map
+//# sourceMappingURL=authenticatedDirectiveTypeDef.js.map

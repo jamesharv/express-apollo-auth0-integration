@@ -7,7 +7,8 @@
     "clean": "rm -rf dist",
     "compile": "npm run clean && tsc",
     "lint": "tslint -p .",
-    "test": "npm run lint",
+    "test": "npm run lint && npm run mocha",
+    "mocha": "npm run compile && bin/nyc-mocha --opts $npm_package_config_mochaOpts",
     "watch": "npm run clean && tsc-watch --onSuccess 'echo Compiled successfully!' --onFailure 'echo Compilation failed!'"
   },
   "repository": {
@@ -25,15 +26,66 @@
     "express": "^4.16.3",
     "graphql": "^14.0.2",
     "jsonwebtoken": "^8.3.0",
-    "jwks-rsa": "^1.3.0"
+    "jwks-rsa": "^1.3.0",
+    "runtypes": "^2.1.6"
   },
   "devDependencies": {
     "@types/auth0": "^2.9.4",
     "@types/graphql": "^14.0.1",
+    "@types/jsonwebtoken": "^7.2.8",
     "@types/node": "^10.11.4",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
+    "mocha-junit-reporter": "^1.18.0",
+    "mocha-typescript": "^1.1.17",
+    "nyc": "^13.0.1",
+    "reflect-metadata": "^0.1.12",
+    "source-map-support": "^0.5.9",
+    "testdouble": "^3.8.1",
     "tsc-watch": "^1.0.29",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.1.1"
+  },
+  "config": {
+    "mochaOpts": "mocha.opts"
+  },
+  "nyc": {
+    "include": [
+      "dist/**/*.js"
+    ],
+    "extension": [
+      ".js"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "checkCoverage": true,
+    "branches": 64,
+    "functions": 70,
+    "lines": 70,
+    "statements": 70,
+    "watermarks": {
+      "branches": [
+        80,
+        90
+      ],
+      "functions": [
+        80,
+        90
+      ],
+      "lines": [
+        80,
+        90
+      ],
+      "statements": [
+        80,
+        90
+      ]
+    },
+    "instrument": true
   }
 }

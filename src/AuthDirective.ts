@@ -1,23 +1,30 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
-import { defaultFieldResolver, GraphQLField, GraphQLObjectType } from "graphql";
+import { defaultFieldResolver, GraphQLField } from "graphql";
 import { authorize } from "./authorize";
 import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
+import { ExtendedGraphQLObjectType } from "./models/ExtendedGraphQLObjectType";
+
+// Extension of GraphQL Field with addition type info.
+interface ExtendedGrapQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {
+  _requiredAuthRole: string;
+}
 
 /**
  * Auth directive for allowing field level authorization.
  */
 export class AuthDirective extends SchemaDirectiveVisitor {
-   public visitObject(type): void {
-     this.ensureFieldsWrapped(type);
-     type._requiredAuthRole = this.args.requires;
+   public visitObject(field: ExtendedGraphQLObjectType): void {
+     this.ensureFieldsWrapped(field);
+     field._requiredAuthRole = (this.args.requires as string);
    }
 
-   public visitFieldDefinition(field, details): void {
+   public visitFieldDefinition(field: ExtendedGrapQLField<any, any>,
+                               details: { objectType: ExtendedGraphQLObjectType }): void {
      this.ensureFieldsWrapped(details.objectType);
-     field._requiredAuthRole = this.args.requires;
+     field._requiredAuthRole = (this.args.requires as string);
    }
 
-   public ensureFieldsWrapped(objectType): void {
+   public ensureFieldsWrapped(objectType: ExtendedGraphQLObjectType): void {
      if (objectType._authFieldsWrapped) {
        return;
      }
@@ -26,14 +33,12 @@ export class AuthDirective extends SchemaDirectiveVisitor {
      const fields = objectType.getFields();
 
      Object.keys(fields).forEach((fieldName) => {
-       const field = fields[fieldName];
+       const field = (fields[fieldName] as ExtendedGrapQLField<any, any>);
        const { resolve = defaultFieldResolver } = field;
        field.resolve = async function(...args): Promise<any> {
-         const requiredRole =
-          field._requiredAuthRole ||
-          objectType._requiredAuthRole;
+         const requiredRole = field._requiredAuthRole !== null ? field._requiredAuthRole : objectType._requiredAuthRole;
 
-         if (!requiredRole) {
+         if (requiredRole == null) {
            return resolve.apply(this, args);
          }
 
