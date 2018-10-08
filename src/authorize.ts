@@ -46,7 +46,10 @@ const getSigningKey = async (kid: string): Promise<string> => {
  *
  * @TODO scope authorization.
  */
-export const authorize = async (authHeader: string, scopes: string[] = []): Promise<any> => {
+export const authorize = async (authHeader?: string, scopes: string[] = []): Promise<any> => {
+  if (authHeader == null) {
+    throw new GraphqlAuthError();
+  }
   // Split out "Bearer" from "JWT" in Authorization header.
   const [type, token] = authHeader.split(" ", 2);
   if (type !== "Bearer" || token == null || token === "") {
