@@ -1,0 +1,10 @@
+{
+  "name": "express-apollo-auth0-integration",
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "npm run build && npm run lint && npm run mocha"
+      }
+    }
+  }
+}
