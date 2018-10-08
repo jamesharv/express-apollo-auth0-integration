@@ -15,6 +15,7 @@ const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
  */
 exports.authorizeExpress = () => (req, _res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
+        console.log(req.headers);
         yield authorize_1.authorize(req.headers.Authorization);
     }
     catch (e) {

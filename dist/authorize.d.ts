@@ -5,4 +5,4 @@
  *
  * @TODO scope authorization.
  */
-export declare const authorize: (authHeader: string, scopes?: string[]) => Promise<any>;
+export declare const authorize: (authHeader?: string, scopes?: string[]) => Promise<any>;

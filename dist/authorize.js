@@ -50,6 +50,9 @@ const getSigningKey = (kid) => __awaiter(this, void 0, void 0, function* () {
  * @TODO scope authorization.
  */
 exports.authorize = (authHeader, scopes = []) => __awaiter(this, void 0, void 0, function* () {
+    if (authHeader == null) {
+        throw new GraphqlAuthError_1.GraphqlAuthError();
+    }
     // Split out "Bearer" from "JWT" in Authorization header.
     const [type, token] = authHeader.split(" ", 2);
     if (type !== "Bearer" || token == null || token === "") {

@@ -50,6 +50,7 @@ export const authorize = async (authHeader?: string, scopes: string[] = []): Pro
   if (authHeader == null) {
     throw new GraphqlAuthError();
   }
+
   // Split out "Bearer" from "JWT" in Authorization header.
   const [type, token] = authHeader.split(" ", 2);
   if (type !== "Bearer" || token == null || token === "") {
