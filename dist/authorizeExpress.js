@@ -11,15 +11,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const authorize_1 = require("./authorize");
 const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
 /**
- * Middleware to validate a valid JWT in the Authorization header for /graphql.
+ * Middleware to validate a valid JWT in the Authorization header.
  */
-exports.authorizeGraphqlRoute = () => (req, _res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.authorizeExpress = () => (req, _res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
         yield authorize_1.authorize(req.headers.Authorization);
     }
     catch (e) {
+        console.error(e);
         throw new GraphqlAuthError_1.GraphqlAuthError();
     }
     next();
 });
-//# sourceMappingURL=authorizeGraphqlRoute.js.map
+//# sourceMappingURL=authorizeExpress.js.map
