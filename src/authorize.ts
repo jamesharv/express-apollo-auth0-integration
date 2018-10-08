@@ -2,7 +2,7 @@ import * as jwt from "jsonwebtoken";
 import * as jwks from "jwks-rsa";
 import { promisify } from "util";
 import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
-import { RawJwtData, RawJwtDataRecord } from "./jwt.runtypes";
+import { RawJwtData, RawJwtDataRecord } from "./model/jwt.runtypes";
 
 const client = jwks({
   cache: true,
@@ -30,7 +30,7 @@ const getJWTData = (token: string): RawJwtData => {
 
 const getSigningKey = async (kid: string): Promise<string> => {
   try {
-    const key: jwks.Jwk = await promisify(client.getSigningKey)(kid);
+    const key = await promisify(client.getSigningKey)(kid);
 
     return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
   }
@@ -42,9 +42,11 @@ const getSigningKey = async (kid: string): Promise<string> => {
 /**
  * Authorize function.
  *
- * @TODO accept array of scopes to check against as well.
+ * Takes an Authorization header in the form of `Bearer ey...` and performs auth.
+ *
+ * @TODO scope authorization.
  */
-export const authorize = async (authHeader: string): Promise<any> => {
+export const authorize = async (authHeader: string, scopes: string[] = []): Promise<any> => {
   // Split out "Bearer" from "JWT" in Authorization header.
   const [type, token] = authHeader.split(" ", 2);
   if (type !== "Bearer" || token == null || token === "") {

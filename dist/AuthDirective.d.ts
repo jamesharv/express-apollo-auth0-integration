@@ -1,6 +1,6 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
 import { GraphQLField } from "graphql";
-import { ExtendedGraphQLObjectType } from "./models/ExtendedGraphQLObjectType";
+import { ExtendedGraphQLObjectType } from "./model/ExtendedGraphQLObjectType";
 interface ExtendedGrapQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {
     _requiredAuthRole: string;
 }

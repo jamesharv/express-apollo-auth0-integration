@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const jwks = require("jwks-rsa");
 const util_1 = require("util");
 const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
-const jwt_runtypes_1 = require("./jwt.runtypes");
+const jwt_runtypes_1 = require("./model/jwt.runtypes");
 const client = jwks({
     cache: true,
     jwksRequestsPerMinute: 10,
@@ -45,9 +45,11 @@ const getSigningKey = (kid) => __awaiter(this, void 0, void 0, function* () {
 /**
  * Authorize function.
  *
- * @TODO accept array of scopes to check against as well.
+ * Takes an Authorization header in the form of `Bearer ey...` and performs auth.
+ *
+ * @TODO scope authorization.
  */
-exports.authorize = (authHeader) => __awaiter(this, void 0, void 0, function* () {
+exports.authorize = (authHeader, scopes = []) => __awaiter(this, void 0, void 0, function* () {
     // Split out "Bearer" from "JWT" in Authorization header.
     const [type, token] = authHeader.split(" ", 2);
     if (type !== "Bearer" || token == null || token === "") {

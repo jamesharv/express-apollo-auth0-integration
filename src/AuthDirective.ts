@@ -2,7 +2,7 @@ import { SchemaDirectiveVisitor } from "apollo-server";
 import { defaultFieldResolver, GraphQLField } from "graphql";
 import { authorize } from "./authorize";
 import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
-import { ExtendedGraphQLObjectType } from "./models/ExtendedGraphQLObjectType";
+import { ExtendedGraphQLObjectType } from "./model/ExtendedGraphQLObjectType";
 
 // Extension of GraphQL Field with addition type info.
 interface ExtendedGrapQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {

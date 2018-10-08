@@ -1,6 +1,8 @@
 /**
  * Authorize function.
  *
- * @TODO accept array of scopes to check against as well.
+ * Takes an Authorization header in the form of `Bearer ey...` and performs auth.
+ *
+ * @TODO scope authorization.
  */
-export declare const authorize: (authHeader: string) => Promise<any>;
+export declare const authorize: (authHeader: string, scopes?: string[]) => Promise<any>;
