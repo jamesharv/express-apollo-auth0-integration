@@ -9,19 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const authorize_1 = require("./authorize");
-const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
 /**
  * Middleware to validate a valid JWT in the Authorization header.
  */
-exports.authorizeExpress = () => (req, _res, next) => __awaiter(this, void 0, void 0, function* () {
+exports.authorizeExpress = () => (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
         console.log(req.headers);
         yield authorize_1.authorize(req.headers.Authorization);
+        next();
     }
     catch (e) {
         console.error(e);
-        throw new GraphqlAuthError_1.GraphqlAuthError();
+        res.status(e.statusCode != null ? e.statusCode : 500);
+        res.send(JSON.stringify({
+            data: null,
+            errors: [{
+                    locations: [],
+                    message: e.message,
+                    path: [],
+                }],
+        }));
+        res.end();
     }
-    next();
 });
 //# sourceMappingURL=authorizeExpress.js.map
