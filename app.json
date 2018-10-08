@@ -3,7 +3,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test": "npm run build && npm run lint && npm run mocha"
+        "test": "npm run lint && npm run mocha"
       }
     }
   }
