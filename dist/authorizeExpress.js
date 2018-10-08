@@ -14,12 +14,10 @@ const authorize_1 = require("./authorize");
  */
 exports.authorizeExpress = () => (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        console.log(req.headers);
-        yield authorize_1.authorize(req.headers.Authorization);
+        yield authorize_1.authorize(req.headers.authorization);
         next();
     }
     catch (e) {
-        console.error(e);
         res.status(e.statusCode != null ? e.statusCode : 500);
         res.send(JSON.stringify({
             data: null,

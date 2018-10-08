@@ -8,12 +8,10 @@ import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
 export const authorizeExpress = (): express.RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
-      console.log(req.headers);
-      await authorize((req.headers.Authorization as string));
+      await authorize((req.headers.authorization as string));
       next();
     }
     catch (e) {
-      console.error(e);
       res.status(e.statusCode != null ? e.statusCode : 500);
       res.send(JSON.stringify({
         data: null,
