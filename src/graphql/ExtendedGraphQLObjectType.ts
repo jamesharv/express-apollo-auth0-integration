@@ -5,4 +5,5 @@ import { GraphQLObjectType } from "graphql";
  */
 export class ExtendedGraphQLObjectType extends GraphQLObjectType {
   public _authFieldsWrapped: boolean;
+  public _requiredAuthRoles: string[];
 }

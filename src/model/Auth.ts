@@ -1,4 +1,3 @@
-import { inject, injectable } from "inversify";
 import * as jwt from "jsonwebtoken";
 import * as jwks from "jwks-rsa";
 import { promisify } from "util";
@@ -8,7 +7,6 @@ import { RawJwtData, RawJwtDataRecord, RawJwtPayload, RawJwtPayloadRecord } from
 /**
  * Auth class for handling JWT validation and decoding.
  */
-@injectable()
 export class Auth {
   private algorithms = ["RS256"];
   private auth0Domain: string;

@@ -12,6 +12,7 @@ export const RawJwtPayloadRecord = Record({
   iss: String,
   sub: String,
 }).And(Partial({
+  // These wont be present when auth0 makes a request to the syndicate API to fetch this info.
   "http://getequiem.com/portal": String,
   "http://getequiem.com/user": String,
   "iat": Number,

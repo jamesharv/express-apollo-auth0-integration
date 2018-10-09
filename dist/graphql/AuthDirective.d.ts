@@ -1,13 +1,13 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
-import { GraphQLField } from "graphql";
-import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
+/**
+ * Interface defining input for the AuthDirective.
+ */
+interface AuthDirectiveInput {
+    rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
+    authHeader: string;
+}
 /**
  * Auth directive for allowing field level authorization.
  */
-export declare class AuthDirective extends SchemaDirectiveVisitor {
-    visitObject(field: ExtendedGraphQLObjectType): void;
-    visitFieldDefinition(field: GraphQLField<any, any>, details: {
-        objectType: ExtendedGraphQLObjectType;
-    }): void;
-    ensureFieldsWrapped(objectType: ExtendedGraphQLObjectType): void;
-}
+export declare const AuthDirective: (input: AuthDirectiveInput) => typeof SchemaDirectiveVisitor;
+export {};

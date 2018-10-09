@@ -1,13 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -17,7 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const inversify_1 = require("inversify");
 const jwt = require("jsonwebtoken");
 const jwks = require("jwks-rsa");
 const util_1 = require("util");
@@ -26,7 +16,7 @@ const jwt_runtypes_1 = require("./jwt.runtypes");
 /**
  * Auth class for handling JWT validation and decoding.
  */
-let Auth = class Auth {
+class Auth {
     constructor() {
         this.algorithms = ["RS256"];
         this.auth0Domain = process.env.AUTH0_AUDIENCE;
@@ -111,10 +101,6 @@ let Auth = class Auth {
             }
         });
     }
-};
-Auth = __decorate([
-    inversify_1.injectable(),
-    __metadata("design:paramtypes", [])
-], Auth);
+}
 exports.Auth = Auth;
 //# sourceMappingURL=Auth.js.map

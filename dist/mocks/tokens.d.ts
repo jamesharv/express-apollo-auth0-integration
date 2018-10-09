@@ -13,5 +13,7 @@ export declare const decoded: {
         iss: string;
         nonce: string;
         sub: string;
+        "http://getequiem.com/portal": string;
+        "http://getequiem.com/user": string;
     };
 };

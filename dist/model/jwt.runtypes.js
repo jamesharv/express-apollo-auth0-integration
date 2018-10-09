@@ -10,6 +10,7 @@ exports.RawJwtPayloadRecord = runtypes_1.Record({
     iss: runtypes_1.String,
     sub: runtypes_1.String,
 }).And(runtypes_1.Partial({
+    // These wont be present when auth0 makes a request to the syndicate API to fetch this info.
     "http://getequiem.com/portal": runtypes_1.String,
     "http://getequiem.com/user": runtypes_1.String,
     "iat": runtypes_1.Number,

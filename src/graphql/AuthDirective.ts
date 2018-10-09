@@ -1,41 +1,97 @@
-import { SchemaDirectiveVisitor } from "apollo-server";
-import { defaultFieldResolver, GraphQLField } from "graphql";
-import { Container } from "inversify";
-import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
+import { AuthenticationError, SchemaDirectiveVisitor } from "apollo-server";
+import {
+  defaultFieldResolver,
+  DirectiveLocation,
+  GraphQLDirective,
+  GraphQLEnumType,
+  GraphQLField,
+  GraphQLList,
+  GraphQLSchema,
+} from "graphql";
 import { Auth } from "../model/Auth";
 import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
 
 /**
+ * Interface defining input for the AuthDirective.
+ */
+interface AuthDirectiveInput {
+  rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
+  authHeader: string;
+}
+
+interface ExtendedGraphQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {
+  _markedAsAuthRequired: boolean;
+  _requiredAuthRoles: string[];
+}
+
+/**
  * Auth directive for allowing field level authorization.
  */
-export class AuthDirective extends SchemaDirectiveVisitor {
-   public visitObject(field: ExtendedGraphQLObjectType): void {
-     this.ensureFieldsWrapped(field);
-   }
+export const AuthDirective = (input: AuthDirectiveInput):
+typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
+  public static getDirectiveDeclaration(
+    directiveName: string,
+    schema: GraphQLSchema,
+  ): GraphQLDirective {
+    return new GraphQLDirective({
+      args: {
+        roles: {
+          type: new GraphQLList((schema.getType("Role") as GraphQLEnumType)),
+        },
+      },
+      locations: [
+        DirectiveLocation.OBJECT,
+        DirectiveLocation.FIELD_DEFINITION,
+      ],
+      name: directiveName,
+    });
+  }
 
-   public visitFieldDefinition(field: GraphQLField<any, any>,
-                               details: { objectType: ExtendedGraphQLObjectType }): void {
-     this.ensureFieldsWrapped(details.objectType);
-   }
+  public visitObject(object: ExtendedGraphQLObjectType): void {
+    this.ensureFieldsWrapped(object);
+    object._requiredAuthRoles = (this.args.roles as string[]);
+  }
 
-   public ensureFieldsWrapped(objectType: ExtendedGraphQLObjectType): void {
-     if (objectType._authFieldsWrapped) {
-       return;
-     }
-     objectType._authFieldsWrapped = true;
+  public visitFieldDefinition(field: ExtendedGraphQLField<any, any>,
+                              details: { objectType: ExtendedGraphQLObjectType }): void {
+    field._markedAsAuthRequired = true;
+    this.ensureFieldsWrapped(details.objectType);
+    field._requiredAuthRoles = (this.args.roles as string[]);
+  }
 
-     const fields = objectType.getFields();
+  public ensureFieldsWrapped(objectType: ExtendedGraphQLObjectType): void {
+    if (objectType._authFieldsWrapped) {
+      return;
+    }
+    objectType._authFieldsWrapped = true;
 
-     Object.keys(fields).forEach((fieldName) => {
-       const field = fields[fieldName];
-       const { resolve = defaultFieldResolver } = field;
-       field.resolve = async function(...args): Promise<any> {
-         const context = args[2];
-         const auth = new Auth();
-         await auth.authorize("Bearer foo");
+    const fields = objectType.getFields();
 
-         return resolve.apply(this, args);
-       };
-     });
-   }
- }
+    Object.keys(fields).forEach((fieldName) => {
+      const field = (fields[fieldName] as ExtendedGraphQLField<any, any>);
+      const { resolve = defaultFieldResolver } = field;
+      field.resolve = async function(...args): Promise<any> {
+        const requiredRoles = (field._requiredAuthRoles !== undefined) ?
+        field._requiredAuthRoles : objectType._requiredAuthRoles;
+
+        if (!field._markedAsAuthRequired && requiredRoles === undefined) {
+
+          return resolve.apply(this, args);
+        }
+
+        const auth = new Auth();
+        const decoded = await auth.authorize(input.authHeader);
+
+        // Handle authorization to check if user has required roles.
+        const currentUserRoles =
+          await input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
+
+        if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {
+          throw new AuthenticationError("User does not have correct roles!");
+        }
+
+        return resolve.apply(this, args);
+      };
+    });
+  }
+};

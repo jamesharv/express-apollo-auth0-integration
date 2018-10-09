@@ -14,12 +14,29 @@ const Auth_1 = require("../model/Auth");
 /**
  * Auth directive for allowing field level authorization.
  */
-class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
-    visitObject(field) {
-        this.ensureFieldsWrapped(field);
+exports.AuthDirective = (input) => class extends apollo_server_1.SchemaDirectiveVisitor {
+    static getDirectiveDeclaration(directiveName, schema) {
+        return new graphql_1.GraphQLDirective({
+            args: {
+                roles: {
+                    type: new graphql_1.GraphQLList(schema.getType("Role")),
+                },
+            },
+            locations: [
+                graphql_1.DirectiveLocation.OBJECT,
+                graphql_1.DirectiveLocation.FIELD_DEFINITION,
+            ],
+            name: directiveName,
+        });
+    }
+    visitObject(object) {
+        this.ensureFieldsWrapped(object);
+        object._requiredAuthRoles = this.args.roles;
     }
     visitFieldDefinition(field, details) {
+        field._markedAsAuthRequired = true;
         this.ensureFieldsWrapped(details.objectType);
+        field._requiredAuthRoles = this.args.roles;
     }
     ensureFieldsWrapped(objectType) {
         if (objectType._authFieldsWrapped) {
@@ -32,14 +49,22 @@ class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
             const { resolve = graphql_1.defaultFieldResolver } = field;
             field.resolve = function (...args) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    const context = args[2];
+                    const requiredRoles = (field._requiredAuthRoles !== undefined) ?
+                        field._requiredAuthRoles : objectType._requiredAuthRoles;
+                    if (!field._markedAsAuthRequired && requiredRoles === undefined) {
+                        return resolve.apply(this, args);
+                    }
                     const auth = new Auth_1.Auth();
-                    yield auth.authorize("Bearer foo");
+                    const decoded = yield auth.authorize(input.authHeader);
+                    // Handle authorization to check if user has required roles.
+                    const currentUserRoles = yield input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
+                    if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {
+                        throw new apollo_server_1.AuthenticationError("User does not have correct roles!");
+                    }
                     return resolve.apply(this, args);
                 });
             };
         });
     }
-}
-exports.AuthDirective = AuthDirective;
+};
 //# sourceMappingURL=AuthDirective.js.map
