@@ -1,4 +1,9 @@
-node_modules
-.nyc_output
+logs
+*.log
+npm-debug.log*
 coverage
-mocha.log
+.nyc_output
+node_modules/
+dist/**/*.spec.js
+dist/**/*.spec.js.map
+dist/**/*.spec.d.ts
