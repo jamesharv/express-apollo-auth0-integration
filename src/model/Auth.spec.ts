@@ -16,7 +16,7 @@ chaiUse(chaiAsPromised);
  * Tests for JWT Authorization.
  */
 @suite(timeout(300), slow(50))
-export class AuthorizeSpec {
+export class AuthSpec {
   protected auth: Auth;
   protected jwksHost = "https://test.foo.com";
   protected jwt: string;
