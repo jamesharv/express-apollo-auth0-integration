@@ -87,7 +87,9 @@ typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
           await input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
 
         if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {
-          throw new AuthenticationError("User does not have correct roles!");
+          throw new AuthenticationError(
+            `You require one of these roles to access this field: [${requiredRoles.join()}]`,
+          );
         }
 
         return resolve.apply(this, args);
