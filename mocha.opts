@@ -1,0 +1,6 @@
+--ui mocha-typescript
+--require reflect-metadata
+--require source-map-support/register
+--file ./mocha.env.js
+--watch-extensions
+js dist/**/*.spec.js

@@ -1,1 +1,9 @@
-node_modules
+logs
+*.log
+npm-debug.log*
+coverage
+.nyc_output
+node_modules/
+dist/**/*.spec.js
+dist/**/*.spec.js.map
+dist/**/*.spec.d.ts
