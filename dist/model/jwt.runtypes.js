@@ -10,8 +10,8 @@ exports.RawJwtPayloadRecord = runtypes_1.Record({
     iss: runtypes_1.String,
     sub: runtypes_1.String,
 }).And(runtypes_1.Partial({
-    "http://getequiem.com/portals": runtypes_1.Array(runtypes_1.String),
-    "http://getequiem.com/uuid": runtypes_1.String,
+    "http://getequiem.com/portal": runtypes_1.String,
+    "http://getequiem.com/user": runtypes_1.String,
     "iat": runtypes_1.Number,
 }));
 /**

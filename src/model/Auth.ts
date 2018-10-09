@@ -20,9 +20,9 @@ export class Auth {
   }
 
   /**
-   * Authorization function that checks an authHeader and optional scopes.
+   * Authorization function that checks an Authorization header string for a valid JWT.
    */
-  public async authorize(authHeader: string, scopes: string[] = []): Promise<RawJwtPayload> {
+  public async authorize(authHeader: string): Promise<RawJwtPayload> {
     this.validateHeader(authHeader);
     const token = this.splitHeader(authHeader);
     const jwtData = this.getJWTData(token);
@@ -49,20 +49,26 @@ export class Auth {
     };
   }
 
-  private splitHeader(authHeader: string): string {
-    // Split out "Bearer" from "JWT" in Authorization header.
-    const [type, token] = authHeader.split(" ", 2);
-    if (type !== "Bearer" || token == null || token === "") {
-      throw new GraphqlAuthError("Incorrectly formatted Authorization header.");
-    }
-
-    return token;
-  }
-
+  /**
+   * Validates presence of authHeader.
+   */
   private validateHeader(authHeader: string): void {
     if (authHeader == null) {
       throw new GraphqlAuthError("No Authorization header provided.");
     }
+    const [type, token] = authHeader.split(" ", 2);
+    if (type !== "Bearer" || token == null || token === "") {
+      throw new GraphqlAuthError("Incorrectly formatted Authorization header.");
+    }
+  }
+
+  /**
+   * Split out "Bearer" and "JWT" from Authorization header.
+   */
+  private splitHeader(authHeader: string): string {
+    const [type, token] = authHeader.split(" ", 2);
+
+    return token;
   }
 
   /**

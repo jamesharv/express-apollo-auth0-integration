@@ -12,8 +12,8 @@ export const RawJwtPayloadRecord = Record({
   iss: String,
   sub: String,
 }).And(Partial({
-  "http://getequiem.com/portals": Array(String),
-  "http://getequiem.com/uuid": String,
+  "http://getequiem.com/portal": String,
+  "http://getequiem.com/user": String,
   "iat": Number,
 }));
 

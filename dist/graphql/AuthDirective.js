@@ -10,19 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 const graphql_1 = require("graphql");
-const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
-const Auth_1 = require("./model/Auth");
+const Auth_1 = require("../model/Auth");
 /**
  * Auth directive for allowing field level authorization.
  */
 class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
     visitObject(field) {
         this.ensureFieldsWrapped(field);
-        field._requiredAuthRole = this.args.requires;
     }
     visitFieldDefinition(field, details) {
         this.ensureFieldsWrapped(details.objectType);
-        field._requiredAuthRole = this.args.requires;
     }
     ensureFieldsWrapped(objectType) {
         if (objectType._authFieldsWrapped) {
@@ -35,18 +32,9 @@ class AuthDirective extends apollo_server_1.SchemaDirectiveVisitor {
             const { resolve = graphql_1.defaultFieldResolver } = field;
             field.resolve = function (...args) {
                 return __awaiter(this, void 0, void 0, function* () {
-                    const requiredRole = field._requiredAuthRole !== null ? field._requiredAuthRole : objectType._requiredAuthRole;
-                    if (requiredRole == null) {
-                        return resolve.apply(this, args);
-                    }
                     const context = args[2];
-                    try {
-                        const auth = new Auth_1.Auth();
-                        yield auth.authorize("Bearer foo");
-                    }
-                    catch (e) {
-                        throw new GraphqlAuthError_1.GraphqlAuthError();
-                    }
+                    const auth = new Auth_1.Auth();
+                    yield auth.authorize("Bearer foo");
                     return resolve.apply(this, args);
                 });
             };

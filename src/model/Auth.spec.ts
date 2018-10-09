@@ -2,15 +2,13 @@ import { AuthenticationError } from "apollo-server";
 import { expect, use as chaiUse } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { slow, suite, test, timeout } from "mocha-typescript";
-import * as td from "testdouble";
 import { jwksEndpoint } from "../mocks/jwks";
-import { privateKey, publicKey, x5cSingle } from "../mocks/keys";
+import { privateKey, publicKey } from "../mocks/keys";
 import { createToken, decoded } from "../mocks/tokens";
 import { Auth } from "./Auth";
 
 // tslint:disable:no-unsafe-any
 // tslint:disable:deprecation
-// tslint:disable:max-line-length
 
 chaiUse(chaiAsPromised);
 
@@ -33,17 +31,18 @@ export class AuthorizeSpec {
 
   @test("No Auth header throws error")
   public async noAuthHeaderError(): Promise<void> {
-    expect(this.auth.authorize(null)).to.eventually.throw(AuthenticationError, "No Authorization header provided.");
+    await expect(this.auth.authorize(null))
+      .to.eventually.be.rejectedWith(AuthenticationError, "No Authorization header provided.");
   }
 
   @test("Invalid Auth header throws error")
   public async invalidAuthHeaderError(): Promise<void> {
-    expect(this.auth.authorize("Not a Header"))
-      .to.eventually.throw(AuthenticationError, "Incorrectly formatted Authorization header.");
+    expect(this.auth.authorize("Invalid header"))
+      .to.eventually.be.rejectedWith(AuthenticationError, "Incorrectly formatted Authorization header.");
     expect(this.auth.authorize("bearer foo"))
-      .to.eventually.throw(AuthenticationError, "Incorrectly formatted Authorization header.");
+      .to.eventually.be.rejectedWith(AuthenticationError, "Incorrectly formatted Authorization header.");
     expect(this.auth.authorize("Bearer"))
-      .to.eventually.throw(AuthenticationError, "Incorrectly formatted Authorization header.");
+      .to.eventually.be.rejectedWith(AuthenticationError, "Incorrectly formatted Authorization header.");
   }
 
   @test("It decodes a valid JWT")

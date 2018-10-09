@@ -8,8 +8,8 @@ export declare const RawJwtPayloadRecord: import("runtypes/lib/types/intersect")
     iss: String;
     sub: String;
 }>, Partial<{
-    "http://getequiem.com/portals": Array<String>;
-    "http://getequiem.com/uuid": String;
+    "http://getequiem.com/portal": String;
+    "http://getequiem.com/user": String;
     "iat": Number;
 }>>;
 /**
@@ -31,8 +31,8 @@ export declare const RawJwtDataRecord: Record<{
         iss: String;
         sub: String;
     }>, Partial<{
-        "http://getequiem.com/portals": Array<String>;
-        "http://getequiem.com/uuid": String;
+        "http://getequiem.com/portal": String;
+        "http://getequiem.com/user": String;
         "iat": Number;
     }>>;
 }>;

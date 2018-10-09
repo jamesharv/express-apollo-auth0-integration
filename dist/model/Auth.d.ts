@@ -8,12 +8,18 @@ export declare class Auth {
     private audience;
     constructor();
     /**
-     * Authorization function that checks an authHeader and optional scopes.
+     * Authorization function that checks an Authorization header string for a valid JWT.
      */
-    authorize(authHeader: string, scopes?: string[]): Promise<RawJwtPayload>;
+    authorize(authHeader: string): Promise<RawJwtPayload>;
     private getOptions;
-    private splitHeader;
+    /**
+     * Validates presence of authHeader.
+     */
     private validateHeader;
+    /**
+     * Split out "Bearer" and "JWT" from Authorization header.
+     */
+    private splitHeader;
     /**
      * Decodes a JWT.
      */

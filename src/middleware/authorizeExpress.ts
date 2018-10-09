@@ -1,7 +1,7 @@
 import { AuthenticationError } from "apollo-server";
 import * as express from "express";
-import { GraphqlAuthError } from "./exceptions/GraphqlAuthError";
-import { Auth } from "./model/Auth";
+import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
+import { Auth } from "../model/Auth";
 
 /**
  * Middleware to validate a valid JWT in the Authorization header.
@@ -27,6 +27,7 @@ export const authorizeExpress = (): express.RequestHandler =>
         res.end();
       }
       else {
+        // We don't actually care if the error isn't a GraphQL error.
         next();
       }
     }

@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const GraphqlAuthError_1 = require("./exceptions/GraphqlAuthError");
-const Auth_1 = require("./model/Auth");
+const GraphqlAuthError_1 = require("../exceptions/GraphqlAuthError");
+const Auth_1 = require("../model/Auth");
 /**
  * Middleware to validate a valid JWT in the Authorization header.
  */
@@ -33,6 +33,7 @@ exports.authorizeExpress = () => (req, res, next) => __awaiter(this, void 0, voi
             res.end();
         }
         else {
+            // We don't actually care if the error isn't a GraphQL error.
             next();
         }
     }

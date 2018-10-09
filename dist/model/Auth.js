@@ -33,9 +33,9 @@ let Auth = class Auth {
         this.audience = process.env.AUTH0_DOMAIN;
     }
     /**
-     * Authorization function that checks an authHeader and optional scopes.
+     * Authorization function that checks an Authorization header string for a valid JWT.
      */
-    authorize(authHeader, scopes = []) {
+    authorize(authHeader) {
         return __awaiter(this, void 0, void 0, function* () {
             this.validateHeader(authHeader);
             const token = this.splitHeader(authHeader);
@@ -60,18 +60,24 @@ let Auth = class Auth {
             issuer: `https://${this.auth0Domain}/`,
         };
     }
-    splitHeader(authHeader) {
-        // Split out "Bearer" from "JWT" in Authorization header.
-        const [type, token] = authHeader.split(" ", 2);
-        if (type !== "Bearer" || token == null || token === "") {
-            throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted Authorization header.");
-        }
-        return token;
-    }
+    /**
+     * Validates presence of authHeader.
+     */
     validateHeader(authHeader) {
         if (authHeader == null) {
             throw new GraphqlAuthError_1.GraphqlAuthError("No Authorization header provided.");
         }
+        const [type, token] = authHeader.split(" ", 2);
+        if (type !== "Bearer" || token == null || token === "") {
+            throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted Authorization header.");
+        }
+    }
+    /**
+     * Split out "Bearer" and "JWT" from Authorization header.
+     */
+    splitHeader(authHeader) {
+        const [type, token] = authHeader.split(" ", 2);
+        return token;
     }
     /**
      * Decodes a JWT.

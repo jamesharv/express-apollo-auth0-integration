@@ -17,14 +17,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const apollo_server_1 = require("apollo-server");
 const chai_1 = require("chai");
 const chaiAsPromised = require("chai-as-promised");
 const mocha_typescript_1 = require("mocha-typescript");
+const httpMocks = require("node-mocks-http");
+const sinon = require("sinon");
 const jwks_1 = require("../mocks/jwks");
 const keys_1 = require("../mocks/keys");
 const tokens_1 = require("../mocks/tokens");
-const Auth_1 = require("./Auth");
+const authorizeExpress_1 = require("./authorizeExpress");
 // tslint:disable:no-unsafe-any
 // tslint:disable:deprecation
 chai_1.use(chaiAsPromised);
@@ -44,29 +45,47 @@ let AuthorizeSpec = class AuthorizeSpec {
             process.env.AUTH0_AUDIENCE = "test.foo.com";
             this.jwt = tokens_1.createToken(keys_1.privateKey, "a1bc", tokens_1.decoded.payload);
             jwks_1.jwksEndpoint(this.jwksHost, [{ pub: keys_1.publicKey, kid: "a1bc" }]);
-            this.auth = new Auth_1.Auth();
         });
     }
-    noAuthHeaderError() {
+    noAuthHeader() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield chai_1.expect(this.auth.authorize(null))
-                .to.eventually.be.rejectedWith(apollo_server_1.AuthenticationError, "No Authorization header provided.");
+            const req = httpMocks.createRequest();
+            const res = httpMocks.createResponse();
+            const next = sinon.spy();
+            yield authorizeExpress_1.authorizeExpress()(req, res, next);
+            chai_1.expect(next.notCalled);
+            chai_1.expect(res.statusCode).to.equal(500);
+            const responseData = JSON.parse(res._getData());
+            chai_1.expect(responseData).to.deep.equal({ data: null, errors: [{ locations: [], message: "No Authorization header provided.", path: [] }] });
         });
     }
     invalidAuthHeaderError() {
         return __awaiter(this, void 0, void 0, function* () {
-            chai_1.expect(this.auth.authorize("Invalid header"))
-                .to.eventually.be.rejectedWith(apollo_server_1.AuthenticationError, "Incorrectly formatted Authorization header.");
-            chai_1.expect(this.auth.authorize("bearer foo"))
-                .to.eventually.be.rejectedWith(apollo_server_1.AuthenticationError, "Incorrectly formatted Authorization header.");
-            chai_1.expect(this.auth.authorize("Bearer"))
-                .to.eventually.be.rejectedWith(apollo_server_1.AuthenticationError, "Incorrectly formatted Authorization header.");
+            const req = httpMocks.createRequest({
+                headers: {
+                    authorization: "Bearer eyabc",
+                },
+            });
+            const res = httpMocks.createResponse();
+            const next = sinon.spy();
+            yield authorizeExpress_1.authorizeExpress()(req, res, next);
+            chai_1.expect(next.notCalled);
+            chai_1.expect(res.statusCode).to.equal(500);
+            const responseData = JSON.parse(res._getData());
+            chai_1.expect(responseData).to.deep.equal({ data: null, errors: [{ locations: [], message: "Incorrectly formatted JWT.", path: [] }] });
         });
     }
-    decodeValidJWT() {
+    validAuthHeader() {
         return __awaiter(this, void 0, void 0, function* () {
-            chai_1.expect(this.auth.authorize(`Bearer ${this.jwt}`))
-                .to.eventually.deep.equal(tokens_1.decoded.payload);
+            const req = httpMocks.createRequest({
+                headers: {
+                    authorization: `Bearer ${this.jwt}`,
+                },
+            });
+            const res = httpMocks.createResponse();
+            const next = sinon.spy();
+            yield authorizeExpress_1.authorizeExpress()(req, res, next);
+            chai_1.expect(next.called);
         });
     }
 };
@@ -75,7 +94,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], AuthorizeSpec.prototype, "noAuthHeaderError", null);
+], AuthorizeSpec.prototype, "noAuthHeader", null);
 __decorate([
     mocha_typescript_1.test("Invalid Auth header throws error"),
     __metadata("design:type", Function),
@@ -83,13 +102,13 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthorizeSpec.prototype, "invalidAuthHeaderError", null);
 __decorate([
-    mocha_typescript_1.test("It decodes a valid JWT"),
+    mocha_typescript_1.test("Valid Auth header allows access"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], AuthorizeSpec.prototype, "decodeValidJWT", null);
+], AuthorizeSpec.prototype, "validAuthHeader", null);
 AuthorizeSpec = __decorate([
     mocha_typescript_1.suite(mocha_typescript_1.timeout(300), mocha_typescript_1.slow(50))
 ], AuthorizeSpec);
 exports.AuthorizeSpec = AuthorizeSpec;
-//# sourceMappingURL=Auth.spec.js.map
+//# sourceMappingURL=authorizeExpress.spec.js.map

@@ -12,7 +12,7 @@ AUTH0_AUDIENCE: https://equiem-syndicate-api-staging.herokuapp.com/
 
 Add to your package.json:
 ```
-"apollo-auth0-extension": "git+https://github.com/Equiem/express-apollo-auth0-integration.git"
+"express-apollo-auth0-integration": "git+https://github.com/Equiem/express-apollo-auth0-integration.git"
 ```
 
 Imports:
@@ -34,19 +34,12 @@ const server = new ApolloServer({
 Copy the graphql definitions into `/graphql/vendor/authenticated.graphql`:
 ```
 # Copied from node_modules/express-apollo-auth0-integration/src/authenticatedDirectiveTypeDef.ts
-enum Role {
-  ADMIN
-  AUTH0
-  USER
-}
-directive @authenticated(
-  requires: Role = ADMIN,
-) on FIELD_DEFINITION | OBJECT
+directive @authenticated on FIELD_DEFINITION | OBJECT
 ```
 
 Use the `authenticated()` directive inside your schema:
 ```
-type User @authenticated(requires: USER) {
+type User @authenticated {
   uuid: String!
   destinations(type: String): UserDestinationConnection!
 }
