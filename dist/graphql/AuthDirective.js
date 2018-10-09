@@ -54,8 +54,10 @@ exports.AuthDirective = (input) => class extends apollo_server_1.SchemaDirective
                     if (!field._markedAsAuthRequired && requiredRoles === undefined) {
                         return resolve.apply(this, args);
                     }
+                    const context = args[2];
+                    const authHeader = yield input.authHeaderCb(context);
                     const auth = new Auth_1.Auth();
-                    const decoded = yield auth.authorize(input.authHeader);
+                    const decoded = yield auth.authorize(authHeader);
                     // Handle authorization to check if user has required roles.
                     const currentUserRoles = yield input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
                     if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {

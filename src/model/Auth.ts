@@ -13,8 +13,8 @@ export class Auth {
   private audience: string;
 
   public constructor() {
-    this.auth0Domain = process.env.AUTH0_AUDIENCE;
-    this.audience = process.env.AUTH0_DOMAIN;
+    this.auth0Domain = process.env.AUTH0_DOMAIN;
+    this.audience = process.env.AUTH0_AUDIENCE;
   }
 
   /**

@@ -16,7 +16,7 @@ import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
  */
 interface AuthDirectiveInput {
   rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
-  authHeader: string;
+  authHeaderCb: (context: any) => Promise<string>;
 }
 
 interface ExtendedGraphQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {
@@ -79,8 +79,11 @@ typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
           return resolve.apply(this, args);
         }
 
+        const context = args[2];
+        const authHeader = await input.authHeaderCb(context);
+
         const auth = new Auth();
-        const decoded = await auth.authorize(input.authHeader);
+        const decoded = await auth.authorize(authHeader);
 
         // Handle authorization to check if user has required roles.
         const currentUserRoles =
