@@ -4,7 +4,7 @@ import { SchemaDirectiveVisitor } from "apollo-server";
  */
 interface AuthDirectiveInput {
     rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
-    authHeader: string;
+    authHeaderCb: (graphQLContext: any) => Promise<string>;
 }
 /**
  * Auth directive for allowing field level authorization.

@@ -19,8 +19,8 @@ const jwt_runtypes_1 = require("./jwt.runtypes");
 class Auth {
     constructor() {
         this.algorithms = ["RS256"];
-        this.auth0Domain = process.env.AUTH0_AUDIENCE;
-        this.audience = process.env.AUTH0_DOMAIN;
+        this.auth0Domain = process.env.AUTH0_DOMAIN;
+        this.audience = process.env.AUTH0_AUDIENCE;
     }
     /**
      * Authorization function that checks an Authorization header string for a valid JWT.
