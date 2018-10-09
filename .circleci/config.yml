@@ -9,6 +9,9 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run:
+          name: Update npm
+          command: npm install -g npm @latest
       - restore_cache:
           key: npm-v1-{{ checksum "package-lock.json" }}
       - run:
