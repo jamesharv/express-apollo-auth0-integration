@@ -38,7 +38,7 @@ export class AuthorizeExpressMiddlewareSpec {
 
     await authorizeExpress()(req, res, next);
     expect(next.notCalled);
-    expect(res.statusCode).to.equal(500);
+    expect(res.statusCode).to.equal(403);
     const responseData = JSON.parse(res._getData());
     expect(responseData).to.deep.equal(
       { data: null, errors: [{ locations: [], message: "No Authorization header provided.", path: [] }] },
@@ -57,7 +57,7 @@ export class AuthorizeExpressMiddlewareSpec {
 
     await authorizeExpress()(req, res, next);
     expect(next.notCalled);
-    expect(res.statusCode).to.equal(500);
+    expect(res.statusCode).to.equal(403);
     const responseData = JSON.parse(res._getData());
     expect(responseData).to.deep.equal(
       { data: null, errors: [{ locations: [], message: "Incorrectly formatted JWT.", path: [] }] },

@@ -7,7 +7,7 @@ const apollo_server_1 = require("apollo-server");
 class GraphqlAuthError extends apollo_server_1.AuthenticationError {
     constructor(message = "You are not authorized") {
         super(message);
-        this.statusCode = 500;
+        this.statusCode = 403;
     }
 }
 exports.GraphqlAuthError = GraphqlAuthError;
