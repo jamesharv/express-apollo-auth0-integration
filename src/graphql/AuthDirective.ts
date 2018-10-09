@@ -16,7 +16,7 @@ import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
  */
 interface AuthDirectiveInput {
   rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
-  authHeaderCb: (context: any) => Promise<string>;
+  authHeaderCb: (graphQLContext: any) => Promise<string>;
 }
 
 interface ExtendedGraphQLField<TSource, TContext> extends GraphQLField<TSource, TContext> {
