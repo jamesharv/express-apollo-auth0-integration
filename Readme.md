@@ -37,7 +37,7 @@ Copy the graphql definitions into `/graphql/vendor/authenticated.graphql`:
 directive @authenticated on FIELD_DEFINITION | OBJECT
 ```
 
-Use the `authenticated()` directive inside your schema:
+Use the `authenticated` directive inside your schema:
 ```
 type User @authenticated {
   uuid: String!
