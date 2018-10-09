@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+CHANGES="$(git status --untracked-files=no --porcelain)"
+if [ -z "$CHANGES" ]; then
+  # Working directory clean excluding untracked files
+  echo 'All clear. No untracked files.'
+  exit 0;
+else
+  # Uncommitted changes in tracked files
+  echo "Uh oh (that's an error). There are uncommitted changes. Did you forget to commit the dist directory?"
+  echo "$CHANGES"
+  exit 1;
+fi
