@@ -22,25 +22,46 @@ import { AuthDirective, authenticatedDirectiveTypeDef } from "express-apollo-aut
 
 Configure ApolloServer:
 ```
+const getRoles = async (userUUID: string, portalUUID): Promise<string[]> => {
+  // Your code for fetching roles based on a user/portal combo.
+  return [
+    "ADMIN",
+  ];
+}
+
+const directiveInput = {
+  authHeader: "Bearer eyabc...",
+  rolesCb: getRoles,
+};
+
 const server = new ApolloServer({
   resolvers: yourResolvers,
   schemaDirectives: {
-    authenticated: AuthDirective,
+    authenticated: AuthDirective(directiveInput),
   },
-  typeDefs: gql`${authenticatedDirectiveTypeDef} ${yourCustomTypes}`,
+  ...
 });
 ```
 
-Copy the graphql definitions into `/graphql/vendor/authenticated.graphql`:
+Create your own graphql definition in `/graphql/local/authenticated.graphql`:
 ```
-# Copied from node_modules/express-apollo-auth0-integration/src/authenticatedDirectiveTypeDef.ts
-directive @authenticated on FIELD_DEFINITION | OBJECT
+// These should match the roles that your callback function returns.
+enum Role {
+  ADMIN
+  USER
+  ...
+}
+directive @authenticated(
+  roles: [Role],
+) on FIELD_DEFINITION | OBJECT
 ```
 
 Use the `authenticated` directive inside your schema:
 ```
-type User @authenticated {
-  uuid: String!
-  destinations(type: String): UserDestinationConnection!
+type User {
+  firstName: String!
+  uuid: String! @authenticated
+  email: String! @authenticated(roles: [USER, ADMIN])
+  isAdmin: Boolean! @authenticated(roles: [ADMIN])
 }
 ```
