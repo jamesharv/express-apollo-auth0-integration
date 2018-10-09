@@ -15,9 +15,43 @@ Add to your package.json:
 "express-apollo-auth0-integration": "git+https://github.com/Equiem/express-apollo-auth0-integration.git"
 ```
 
+### Middlewares
+
 Imports:
 ```
-import { AuthDirective, authenticatedDirectiveTypeDef } from "express-apollo-auth0-integration";
+import { authorizeExpress, decodeJWT } from "express-apollo-auth0-integration";
+```
+
+`authorizeExpress` middleware will protect your routes and throw a graphQL friendly error if invalid JWT is in the Authorization header. `decodeJWT` won't protect anything, but will decode any valid JWTs found in the Authorization header and add it to your request.
+```
+app.use(authorizeExpress());
+app.use(decodeJWT());
+```
+
+You can totally build your own custom middleware using the `Auth` class exported:
+```
+import { Auth } from "express-apollo-auth0-integration";
+
+export const yourMiddleware = (args): express.RequestHandler =>
+  async (req, res, next): Promise<void> => {
+    try {
+      const auth = new Auth();
+      const decodedJWT = await auth.authorize((req.headers.authorization as string));
+      // Do something with decoded JWT.
+    }
+    catch (e) {
+      // Handle errors.
+    }
+    next();
+  };
+
+```
+
+### GraphQL directive
+
+Imports:
+```
+import { AuthDirective } from "express-apollo-auth0-integration";
 ```
 
 Configure ApolloServer:
