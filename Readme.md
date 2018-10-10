@@ -63,8 +63,12 @@ const getRoles = async (userUUID: string, portalUUID): Promise<string[]> => {
   ];
 }
 
+const getAuthHeader = async(graphQLContext: Container): Promise<string> => {
+  return graphQLContext.get(RequestContext).authHeader;
+}
+
 const directiveInput = {
-  authHeader: "Bearer eyabc...",
+  authHeader: getAuthHeader,
   rolesCb: getRoles,
 };
 
