@@ -86,7 +86,7 @@ typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
         const decoded = await auth.authorize(authHeader);
 
         // Handle authorization to check if user has required roles.
-        if (requiredRoles.length > 0) {
+        if (requiredRoles) {
           const currentUserRoles =
             await input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
 
