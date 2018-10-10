@@ -9,13 +9,14 @@ import {
   GraphQLSchema,
 } from "graphql";
 import { Auth } from "../model/Auth";
+import { RawJwtPayload } from "../model/jwt.runtypes";
 import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
 
 /**
  * Interface defining input for the AuthDirective.
  */
 interface AuthDirectiveInput {
-  rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
+  rolesCb: (decodedJWT: RawJwtPayload) => Promise<string[]>;
   authHeaderCb: (graphQLContext: any) => Promise<string>;
 }
 
@@ -83,12 +84,12 @@ typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
         const authHeader = await input.authHeaderCb(context);
 
         const auth = new Auth();
-        const decoded = await auth.authorize(authHeader);
+        const decodedJWT = await auth.authorize(authHeader);
 
         // Handle authorization to check if user has required roles.
         if (requiredRoles) {
           const currentUserRoles =
-            await input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
+            await input.rolesCb(decodedJWT);
 
           if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {
             throw new AuthenticationError(

@@ -51,13 +51,13 @@ export const yourMiddleware = (args): express.RequestHandler =>
 
 Imports:
 ```
-import { AuthDirective } from "express-apollo-auth0-integration";
+import { AuthDirective, RawJwtPayload } from "express-apollo-auth0-integration";
 ```
 
 Configure ApolloServer:
 ```
-const getRoles = async (userUUID: string, portalUUID): Promise<string[]> => {
-  // Your code for fetching roles based on a user/portal combo.
+const getRoles = async (decodedJWT: RawJwtPayload): Promise<string[]> => {
+  // Your code for fetching roles based on the decoded JWT.
   return [
     "ADMIN",
   ];
@@ -68,7 +68,7 @@ const getAuthHeader = async(graphQLContext: Container): Promise<string> => {
 }
 
 const directiveInput = {
-  authHeader: getAuthHeader,
+  authHeaderCb: getAuthHeader,
   rolesCb: getRoles,
 };
 

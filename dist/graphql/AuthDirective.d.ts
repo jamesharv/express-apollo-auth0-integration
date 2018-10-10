@@ -1,9 +1,10 @@
 import { SchemaDirectiveVisitor } from "apollo-server";
+import { RawJwtPayload } from "../model/jwt.runtypes";
 /**
  * Interface defining input for the AuthDirective.
  */
 interface AuthDirectiveInput {
-    rolesCb: (userUUID: string, portalUUID: string) => Promise<string[]>;
+    rolesCb: (decodedJWT: RawJwtPayload) => Promise<string[]>;
     authHeaderCb: (graphQLContext: any) => Promise<string>;
 }
 /**

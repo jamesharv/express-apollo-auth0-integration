@@ -57,10 +57,10 @@ exports.AuthDirective = (input) => class extends apollo_server_1.SchemaDirective
                     const context = args[2];
                     const authHeader = yield input.authHeaderCb(context);
                     const auth = new Auth_1.Auth();
-                    const decoded = yield auth.authorize(authHeader);
+                    const decodedJWT = yield auth.authorize(authHeader);
                     // Handle authorization to check if user has required roles.
                     if (requiredRoles) {
-                        const currentUserRoles = yield input.rolesCb(decoded["http://getequiem.com/user"], decoded["http://getequiem.com/portal"]);
+                        const currentUserRoles = yield input.rolesCb(decodedJWT);
                         if (currentUserRoles.filter((role) => -1 !== requiredRoles.indexOf(role)).length === 0) {
                             throw new apollo_server_1.AuthenticationError(`You require one of these roles to access this field: [${requiredRoles.join()}]`);
                         }
