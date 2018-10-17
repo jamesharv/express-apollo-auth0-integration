@@ -1,4 +1,3 @@
-import { AuthenticationError } from "apollo-server";
 import * as express from "express";
 import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
 import { Auth } from "../model/Auth";

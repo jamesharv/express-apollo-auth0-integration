@@ -1,4 +1,3 @@
-import { AuthenticationError } from "apollo-server";
 import { expect, use as chaiUse } from "chai";
 import * as chaiAsPromised from "chai-as-promised";
 import { slow, suite, test, timeout } from "mocha-typescript";
@@ -7,7 +6,6 @@ import * as sinon from "sinon";
 import { jwksEndpoint } from "../mocks/jwks";
 import { privateKey, publicKey, x5cSingle } from "../mocks/keys";
 import { createToken, decoded } from "../mocks/tokens";
-import { Auth } from "../model/Auth";
 import { authorizeExpress } from "./authorizeExpress";
 
 // tslint:disable:no-unsafe-any
@@ -24,8 +22,6 @@ export class AuthorizeExpressMiddlewareSpec {
   protected jwt: string;
 
   public async before(): Promise<void> {
-    process.env.AUTH0_DOMAIN = "test.foo.com";
-    process.env.AUTH0_AUDIENCE = "test.foo.com";
     this.jwt = createToken(privateKey, "a1bc", decoded.payload);
     jwksEndpoint(this.jwksHost, [ { pub: publicKey, kid: "a1bc" } ]);
   }

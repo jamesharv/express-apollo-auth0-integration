@@ -1,7 +1,7 @@
 import * as jwt from "jsonwebtoken";
-import * as jwks from "jwks-rsa";
 import { promisify } from "util";
 import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
+import { jwksClient } from "./jwks";
 import { RawJwtData, RawJwtDataRecord, RawJwtPayload, RawJwtPayloadRecord } from "./jwt.runtypes";
 
 /**
@@ -87,15 +87,9 @@ export class Auth {
    * Returns the signing key for a given kid.
    */
   private async getSigningKey(kid: string): Promise<string> {
-    const client = jwks({
-      cache: true,
-      jwksRequestsPerMinute: 10,
-      jwksUri: `https://${this.auth0Domain}/.well-known/jwks.json`,
-      rateLimit: true,
-    });
 
     try {
-      const key = await promisify(client.getSigningKey)(kid);
+      const key = await promisify(jwksClient.getSigningKey)(kid);
 
       return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
     }

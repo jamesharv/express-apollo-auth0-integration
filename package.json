@@ -8,7 +8,7 @@
     "compile": "npm run clean && tsc",
     "lint": "tslint -p .",
     "test": "npm run lint && npm run mocha && bin/no-tracked-changes",
-    "mocha": "npm run compile && bin/nyc-mocha --opts $npm_package_config_mochaOpts",
+    "mocha": "npm run compile && env AUTH0_DOMAIN=test.foo.com AUTH0_AUDIENCE=test.foo.com bin/nyc-mocha --opts $npm_package_config_mochaOpts",
     "watch": "npm run clean && tsc-watch --onSuccess 'echo Compiled successfully!' --onFailure 'echo Compilation failed!'"
   },
   "repository": {

@@ -6,6 +6,7 @@ import { jwksEndpoint } from "../mocks/jwks";
 import { privateKey, publicKey } from "../mocks/keys";
 import { createToken, decoded } from "../mocks/tokens";
 import { Auth } from "./Auth";
+import { jwksClient } from "./jwks";
 
 // tslint:disable:no-unsafe-any
 // tslint:disable:deprecation
@@ -22,8 +23,6 @@ export class AuthSpec {
   protected jwt: string;
 
   public async before(): Promise<void> {
-    process.env.AUTH0_DOMAIN = "test.foo.com";
-    process.env.AUTH0_AUDIENCE = "test.foo.com";
     this.jwt = createToken(privateKey, "a1bc", decoded.payload);
     jwksEndpoint(this.jwksHost, [ { pub: publicKey, kid: "a1bc" } ]);
     this.auth = new Auth();
