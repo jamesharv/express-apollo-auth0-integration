@@ -87,7 +87,6 @@ export class Auth {
    * Returns the signing key for a given kid.
    */
   private async getSigningKey(kid: string): Promise<string> {
-
     try {
       const key = await promisify(jwksClient.getSigningKey)(kid);
 
