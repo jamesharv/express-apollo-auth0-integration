@@ -25,7 +25,7 @@ export class AuthSpec {
   public async before(): Promise<void> {
     this.jwt = createToken(privateKey, "a1bc", decoded.payload);
     jwksEndpoint(this.jwksHost, [ { pub: publicKey, kid: "a1bc" } ]);
-    this.auth = new Auth();
+    this.auth = new Auth(AuthenticationError);
   }
 
   @test("No Auth header throws error")

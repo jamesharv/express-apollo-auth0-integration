@@ -8,6 +8,7 @@ import {
   GraphQLList,
   GraphQLSchema,
 } from "graphql";
+import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
 import { Auth } from "../model/Auth";
 import { RawJwtPayload } from "../model/jwt.runtypes";
 import { ExtendedGraphQLObjectType } from "./ExtendedGraphQLObjectType";
@@ -83,7 +84,7 @@ typeof SchemaDirectiveVisitor => class extends SchemaDirectiveVisitor {
         const context = args[2];
         const authHeader = await input.authHeaderCb(context);
 
-        const auth = new Auth();
+        const auth = new Auth(GraphqlAuthError);
         const decodedJWT = await auth.authorize(authHeader);
 
         // Handle authorization to check if user has required roles.
