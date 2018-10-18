@@ -8,13 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ExpressAuthError_1 = require("../exceptions/ExpressAuthError");
 const Auth_1 = require("../model/Auth");
 /**
  * Middleware to decoded the JWT in the Authorization header and add it to request.
  */
 exports.decodeJWT = () => (req, res, next) => __awaiter(this, void 0, void 0, function* () {
     try {
-        const auth = new Auth_1.Auth();
+        const auth = new Auth_1.Auth(ExpressAuthError_1.ExpressAuthError);
         req.jwt = yield auth.authorize(req.headers.authorization);
     }
     catch (e) {

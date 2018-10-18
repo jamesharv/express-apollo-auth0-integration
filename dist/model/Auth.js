@@ -10,14 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
 const util_1 = require("util");
-const GraphqlAuthError_1 = require("../exceptions/GraphqlAuthError");
 const jwks_1 = require("./jwks");
 const jwt_runtypes_1 = require("./jwt.runtypes");
 /**
  * Auth class for handling JWT validation and decoding.
  */
 class Auth {
-    constructor() {
+    constructor(errorConstructor) {
+        this.errorConstructor = errorConstructor;
         this.algorithms = ["RS256"];
         this.auth0Domain = process.env.AUTH0_DOMAIN;
         this.audience = process.env.AUTH0_AUDIENCE;
@@ -55,11 +55,11 @@ class Auth {
      */
     validateHeader(authHeader) {
         if (authHeader == null) {
-            throw new GraphqlAuthError_1.GraphqlAuthError("No Authorization header provided.");
+            throw new this.errorConstructor("No Authorization header provided.");
         }
         const [type, token] = authHeader.split(" ", 2);
         if (type !== "Bearer" || token == null || token === "") {
-            throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted Authorization header.");
+            throw new this.errorConstructor("Incorrectly formatted Authorization header.");
         }
     }
     /**
@@ -78,7 +78,7 @@ class Auth {
             return jwt_runtypes_1.RawJwtDataRecord.check(dtoken);
         }
         catch (e) {
-            throw new GraphqlAuthError_1.GraphqlAuthError("Incorrectly formatted JWT.");
+            throw new this.errorConstructor("Incorrectly formatted JWT.");
         }
     }
     /**
@@ -91,7 +91,7 @@ class Auth {
                 return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
             }
             catch (e) {
-                throw new GraphqlAuthError_1.GraphqlAuthError("Unable to retrieve public key from kid.");
+                throw new this.errorConstructor("Unable to retrieve public key from kid.");
             }
         });
     }
