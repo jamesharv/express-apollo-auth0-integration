@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require("jsonwebtoken");
-const jwks = require("jwks-rsa");
 const util_1 = require("util");
 const GraphqlAuthError_1 = require("../exceptions/GraphqlAuthError");
+const jwks_1 = require("./jwks");
 const jwt_runtypes_1 = require("./jwt.runtypes");
 /**
  * Auth class for handling JWT validation and decoding.
@@ -86,14 +86,8 @@ class Auth {
      */
     getSigningKey(kid) {
         return __awaiter(this, void 0, void 0, function* () {
-            const client = jwks({
-                cache: true,
-                jwksRequestsPerMinute: 10,
-                jwksUri: `https://${this.auth0Domain}/.well-known/jwks.json`,
-                rateLimit: true,
-            });
             try {
-                const key = yield util_1.promisify(client.getSigningKey)(kid);
+                const key = yield util_1.promisify(jwks_1.jwksClient.getSigningKey)(kid);
                 return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
             }
             catch (e) {
