@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const apollo_server_1 = require("apollo-server");
 const graphql_1 = require("graphql");
+const GraphqlAuthError_1 = require("../exceptions/GraphqlAuthError");
 const Auth_1 = require("../model/Auth");
 /**
  * Auth directive for allowing field level authorization.
@@ -56,7 +57,7 @@ exports.AuthDirective = (input) => class extends apollo_server_1.SchemaDirective
                     }
                     const context = args[2];
                     const authHeader = yield input.authHeaderCb(context);
-                    const auth = new Auth_1.Auth();
+                    const auth = new Auth_1.Auth(GraphqlAuthError_1.GraphqlAuthError);
                     const decodedJWT = yield auth.authorize(authHeader);
                     // Handle authorization to check if user has required roles.
                     if (requiredRoles) {

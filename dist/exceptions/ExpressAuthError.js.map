@@ -1,0 +1,1 @@
+{"version":3,"file":"ExpressAuthError.js","sourceRoot":"","sources":["../../src/exceptions/ExpressAuthError.ts"],"names":[],"mappings":";;AACA;;GAEG;AACH,MAAa,gBAAiB,SAAQ,KAAK;IAGzC,YAAY,OAAO,GAAG,wBAAwB;QAC5C,KAAK,CAAC,OAAO,CAAC,CAAC;QAHD,eAAU,GAAG,GAAG,CAAC;IAIjC,CAAC;CACF;AAND,4CAMC"}

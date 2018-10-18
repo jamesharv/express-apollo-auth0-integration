@@ -3,10 +3,13 @@ import { RawJwtPayload } from "./jwt.runtypes";
  * Auth class for handling JWT validation and decoding.
  */
 export declare class Auth {
+    private errorConstructor;
     private algorithms;
     private auth0Domain;
     private audience;
-    constructor();
+    constructor(errorConstructor: {
+        new (message?: string): Error;
+    });
     /**
      * Authorization function that checks an Authorization header string for a valid JWT.
      */

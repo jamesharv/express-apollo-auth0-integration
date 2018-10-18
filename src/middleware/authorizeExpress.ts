@@ -1,5 +1,5 @@
 import * as express from "express";
-import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
+import { ExpressAuthError } from "../exceptions/ExpressAuthError";
 import { Auth } from "../model/Auth";
 
 /**
@@ -8,12 +8,12 @@ import { Auth } from "../model/Auth";
 export const authorizeExpress = (): express.RequestHandler =>
   async (req, res, next): Promise<void> => {
     try {
-      const auth = new Auth();
+      const auth = new Auth(ExpressAuthError);
       await auth.authorize((req.headers.authorization as string));
       next();
     }
     catch (e) {
-      if (e instanceof GraphqlAuthError) {
+      if (e instanceof ExpressAuthError) {
         res.status(e.statusCode);
         res.send(JSON.stringify({
           data: null,

@@ -1,6 +1,5 @@
 import * as jwt from "jsonwebtoken";
 import { promisify } from "util";
-import { GraphqlAuthError } from "../exceptions/GraphqlAuthError";
 import { jwksClient } from "./jwks";
 import { RawJwtData, RawJwtDataRecord, RawJwtPayload, RawJwtPayloadRecord } from "./jwt.runtypes";
 
@@ -12,7 +11,9 @@ export class Auth {
   private auth0Domain: string;
   private audience: string;
 
-  public constructor() {
+  public constructor(
+    private errorConstructor: { new(message?: string): Error },
+  ) {
     this.auth0Domain = process.env.AUTH0_DOMAIN;
     this.audience = process.env.AUTH0_AUDIENCE;
   }
@@ -52,11 +53,11 @@ export class Auth {
    */
   private validateHeader(authHeader: string): void {
     if (authHeader == null) {
-      throw new GraphqlAuthError("No Authorization header provided.");
+      throw new this.errorConstructor("No Authorization header provided.");
     }
     const [type, token] = authHeader.split(" ", 2);
     if (type !== "Bearer" || token == null || token === "") {
-      throw new GraphqlAuthError("Incorrectly formatted Authorization header.");
+      throw new this.errorConstructor("Incorrectly formatted Authorization header.");
     }
   }
 
@@ -79,7 +80,7 @@ export class Auth {
      return RawJwtDataRecord.check(dtoken);
    }
    catch (e) {
-     throw new GraphqlAuthError("Incorrectly formatted JWT.");
+     throw new this.errorConstructor("Incorrectly formatted JWT.");
    }
   }
 
@@ -93,7 +94,7 @@ export class Auth {
       return key.publicKey != null ? key.publicKey : key.rsaPublicKey;
     }
     catch (e) {
-      throw new GraphqlAuthError("Unable to retrieve public key from kid.");
+      throw new this.errorConstructor("Unable to retrieve public key from kid.");
     }
   }
 }
