@@ -1,5 +1,5 @@
 {
-  "name": "express-apollo-auth0-integration",
+  "name": "@equiem/express-apollo-auth0-integration",
   "version": "1.0.0",
   "description": "Auth0 auth handling for Apollo server",
   "main": "dist/index.js",
