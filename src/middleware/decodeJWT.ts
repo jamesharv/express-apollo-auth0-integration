@@ -10,12 +10,14 @@ export type JWTRequest = express.Request & { jwt: RawJwtPayload };
  */
 export const decodeJWT = (): express.RequestHandler =>
   async (req: JWTRequest, res, next): Promise<void> => {
-    try {
-      const auth = new Auth(ExpressAuthError);
-      req.jwt = await auth.authorize((req.headers.authorization as string));
-    }
-    catch (e) {
-      // We don't actually care about errors.
+    if (req.headers.authorization != null) {
+      try {
+        const auth = new Auth(ExpressAuthError);
+        req.jwt = await auth.authorize((req.headers.authorization as string));
+      }
+      catch (e) {
+        next(e);
+      }
     }
     next();
   };
