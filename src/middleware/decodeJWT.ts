@@ -15,7 +15,7 @@ export const decodeJWT = (): express.RequestHandler =>
       req.jwt = await auth.authorize((req.headers.authorization as string));
     }
     catch (e) {
-      // We don't actually care about errors.
+      console.error(e);
     }
     next();
   };
